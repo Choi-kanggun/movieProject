@@ -47,30 +47,29 @@ export const modalMovieCard = async (movieId) => {
     };
 };
 
-export const bookmarkWrapper = () => {
+export const bookmarkWrapper = async () => {
     const savedIdList = JSON.parse(localStorage.getItem("movieIdList"));
     // 북마크에 추가된 영화만 나타내기 위하여 기존 movie-wrap의 영화 카드들을 비워준다.
-    movieWrap.innerHTML = ""
+    movieWrap.innerHTML = "";
 
     // 로컬스토리지가 비어있으면 alert창을 띄우고 첫 화면으로 돌아간다.
     if (savedIdList.length === 0) {
         alert("북마크에 추가된 영화가 없습니다.");
         fetchMovie("https://api.themoviedb.org/3/movie/top_rated?language=ko&page=1");
-    
-    // 로컬스토리지가 비어있지 않으면, 
-    // 로컬스토리지에 저장된 id배열의 길이만큼 순회하며 북마크에 카드를 생성한다.
-    } else {
-        savedIdList.forEach((savedId) => {
-            fetch(`https://api.themoviedb.org/3/movie/${savedId}?language=ko&page=1`, options)
-                .then(response => response.json())
-                .then(response => {
-                    makeBookmark(response);
-                })
-                .catch(err => console.error(err));
-        });
-    }
-};
 
+        // 로컬스토리지가 비어있지 않으면, 
+        // 로컬스토리지에 저장된 id배열의 길이만큼 순회하며 북마크에 카드를 생성한다.
+    } else {
+        try {
+            for (const savedId of savedIdList) {
+                const response = await ((await fetch(`https://api.themoviedb.org/3/movie/${savedId}?language=ko&page=1`, options)).json());
+                makeBookmark(response);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+}
 
 // 영화 카드 모달창 클릭 이벤트
 modalWrap.addEventListener("click", (event) => {
