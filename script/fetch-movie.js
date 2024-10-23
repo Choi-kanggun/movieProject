@@ -49,7 +49,6 @@ export const modalMovieCard = async (movieId) => {
 
 export const bookmarkWrapper = () => {
     const savedIdList = JSON.parse(localStorage.getItem("movieIdList"));
-    console.log(savedIdList);
     // 북마크에 추가된 영화만 나타내기 위하여 기존 movie-wrap의 영화 카드들을 비워준다.
     movieWrap.innerHTML = ""
 
@@ -99,7 +98,6 @@ modalWrap.addEventListener("click", (event) => {
     // 북마크 취소 버튼을 누르면 로컬스토리지에 저장된 id배열값을 순회하며,
     // 현재 모달 카드의 영화 id를 없앤 배열을 재할당하고 버튼 업데이트
     if (event.target === cancelBookmarkBtn && currentId !== null) {
-        console.log(currentId)
         const savedIdList = JSON.parse(localStorage.getItem("movieIdList"));
         const movieIdList = savedIdList ? savedIdList : [];
         const newMovieIdList = movieIdList.filter(id => id !== currentId);
